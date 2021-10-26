@@ -2,7 +2,7 @@ const { query } = require('./../modules/connect-mysql');
 const db = require('./../modules/connect-mysql')
 
 // const tableName = 'products'
-const tableName = 'products_food'
+const tableName = 'product_food'
 const pkField = 'sid'
 
 
@@ -14,7 +14,7 @@ class Product {
     }
     // 讀取所有資料 + 篩選功能
 
-    static async findAll(option={}){
+    static async findAll(options={}){
         let op = {
             perPage: 6,
             page:1,
@@ -23,6 +23,7 @@ class Product {
             priceLow:0,
             priceHight:0,
             keyword:'',
+            ...options
         }
         const output = {
             perPage: op.perPage,
@@ -33,14 +34,6 @@ class Product {
         }
 
         let where = ' WHERE 1 ';
-        // if(op.category){
-        //     where += ' AND cate_sid='+ parseInt(op.category)+ ' '; //建議後面接空格,因為where會一直接字串
-        // }
-        // if(op.keyword){
-        //     // 關鍵字搜尋要做跳脫
-        //     where += ' AND name LIKE ' + db.escape('%' + op.keyword+ '%') +' ';
-        // }
-        
         const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName}`
         const [t_rs] = await db.query(t_sql)
         const totalRows = t_rs[0].totalRows
