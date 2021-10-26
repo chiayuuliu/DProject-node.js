@@ -23,6 +23,8 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+app.use(express.static('public'))
+
 
 // restful api 作法. /product是baseURL
 app.use('/product', require('./routes/product'));
