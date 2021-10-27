@@ -6,9 +6,14 @@ const router = express.Router();
 // 有設定baseURL是/product, 所以/ =對應到/product
 // 列表
 router.get('/', async(req,res)=>{    
-    res.json(await Product.findAll(req.query));
-
+        res.json(await Product.findAll(req.query));
 })
+
+// router.get('/', async(req,res)=>{    
+//     let cate = parseInt(req.query.cate) || 0
+//     res.json(await Product.findAll(cate));
+
+// })
 
 // 讀取單筆
 router.get('/:id', async (req, res) => {

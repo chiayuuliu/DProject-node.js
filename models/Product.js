@@ -18,10 +18,7 @@ class Product {
         let op = {
             perPage: 6,
             page:1,
-            category: null,
-            orderBy:'',
-            priceLow:0,
-            priceHight:0,
+            cate: null,
             keyword:'',
             ...options
         }
@@ -30,11 +27,24 @@ class Product {
             page:op.page,
             totalRows:0,
             totalPages:0,
+            cate:null,
             rows:[],
         }
 
         let where = ' WHERE 1 ';
-        const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName}`
+        // 分類
+        if(op.cate){
+            where += ' AND cate_id='+ parseInt(op.cate)+ ' '; //建議後面接空格,因為where會一直接字串
+            output.cate= parseInt(op.cate)
+        }
+
+        // 關鍵字
+        if(op.keyword){
+            // 關鍵字搜尋要做跳脫
+            where += ' AND name LIKE ' + db.escape('%' + op.keyword+ '%') +' ';
+        }
+
+        const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName} `+ where
         const [t_rs] = await db.query(t_sql)
         const totalRows = t_rs[0].totalRows
 
@@ -44,7 +54,7 @@ class Product {
             // 設定總頁數
             output.totalPages = Math.ceil(totalRows/op.perPage);
             // 拿到所有資料
-            const sql = `SELECT * FROM ${tableName} LIMIT ${(op.page-1)*(op.perPage)}, ${op.perPage}`;
+            const sql = `SELECT * FROM ${tableName} ${where} LIMIT ${(op.page-1)*(op.perPage)}, ${op.perPage}`;
             const [rs] = await db.query(sql)
             output.rows = rs;
         }
