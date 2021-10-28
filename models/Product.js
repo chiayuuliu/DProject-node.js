@@ -32,14 +32,21 @@ class Product {
         }
 
         let where = ' WHERE 1 ';
-        // 分類
-        if(op.cate==0){
-            output.cate= parseInt(op.cate)
-        }else{
-            where += ' AND cate_id='+ parseInt(op.cate)+ ' '; 
-            output.cate= parseInt(op.cate)
-        }
+        // 分類, 如果有值才去判斷是哪個分類
 
+        if(op.cate){
+            if(op.cate==="0"){
+                output.cate= op.cate
+            }else{
+                where += ' AND cate_id='+ parseInt(op.cate)+ ' '; 
+                output.cate= parseInt(op.cate)
+            }
+        }
+        // if(op.cate){
+        //     where += ' AND cate_id='+ parseInt(op.cate)+ ' '; //建議後面接空格,因為where會一直接字串
+        //     output.cate= parseInt(op.cate)
+        // }
+        
         // 關鍵字
         if(op.keyword){
             // 關鍵字搜尋要做跳脫
@@ -57,7 +64,7 @@ class Product {
             // 設定總頁數
             output.totalPages = Math.ceil(totalRows/op.perPage);
             // 拿到所有資料
-            const sql = `SELECT * FROM ${tableName} ${where} LIMIT ${(op.page-1)*(op.perPage)}, ${op.perPage}`;
+            const sql = `SELECT * FROM ${tableName}  ${where} LIMIT ${(op.page-1)*(op.perPage)}, ${op.perPage}`;
             const [rs] = await db.query(sql)
             output.rows = rs;
         }
