@@ -7,7 +7,6 @@ const pkField = 'sid'
 
 
 class Product {
-
     // 預設值是空物件, 設定defaultOb 到data
     constructor(defaultObj={}) {
         this.data = defaultObj;
@@ -28,13 +27,16 @@ class Product {
             totalRows:0,
             totalPages:0,
             cate:null,
+            keyword:'',
             rows:[],
         }
 
         let where = ' WHERE 1 ';
         // 分類
-        if(op.cate){
-            where += ' AND cate_id='+ parseInt(op.cate)+ ' '; //建議後面接空格,因為where會一直接字串
+        if(op.cate==0){
+            output.cate= parseInt(op.cate)
+        }else{
+            where += ' AND cate_id='+ parseInt(op.cate)+ ' '; 
             output.cate= parseInt(op.cate)
         }
 
@@ -42,6 +44,7 @@ class Product {
         if(op.keyword){
             // 關鍵字搜尋要做跳脫
             where += ' AND name LIKE ' + db.escape('%' + op.keyword+ '%') +' ';
+            output.keyword=op.keyword
         }
 
         const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName} `+ where

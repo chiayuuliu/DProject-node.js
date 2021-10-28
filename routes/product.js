@@ -9,11 +9,6 @@ router.get('/', async(req,res)=>{
         res.json(await Product.findAll(req.query));
 })
 
-// router.get('/', async(req,res)=>{    
-//     let cate = parseInt(req.query.cate) || 0
-//     res.json(await Product.findAll(cate));
-
-// })
 
 // 讀取單筆
 router.get('/:id', async (req, res) => {
